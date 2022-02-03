@@ -6,6 +6,7 @@ import 'package:cumbialive/model/live/live_model.dart';
 import 'package:cumbialive/screens/live/merchant_live/live_stream/audience_onlive_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../screens.dart';
 import 'package:cumbialive/screens/store_profile/profile_store.dart';
@@ -314,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Container(
                                   height: (MediaQuery.of(context).size.width *
                                           0.3) -
-                                      30,
+                                      40,
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
                                       image: NetworkImage(
@@ -680,7 +681,7 @@ class _HomeScreenState extends State<HomeScreen> {
         if (querySnapshot.docs.isNotEmpty) {
           querySnapshot.docs.forEach((liveStream) {
             LogMessage.get("USERS");
-            References.users.firestore.doc(liveStream.data()["broadcasterId"]).get()
+            References.users.doc(liveStream.data()["broadcasterId"]).get()
                 .then((userDoc) {
               LogMessage.getSuccess("USERS");
               if (userDoc.data().isNotEmpty) {
@@ -735,7 +736,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
         querySnapshot.docs.forEach((merchantStream) {
           LogMessage.get("USERS");
-          References.users.firestore
+          LogMessage.get(merchantStream.data().toString());
+
+          LogMessage.get(References.users.firestore
+              .collection(merchantStream.data()["userId"]).toString());
+          References.users
               .doc(merchantStream.data()["userId"]).get()
               .then((userDoc) {
             LogMessage.getSuccess("USERS");
