@@ -1,4 +1,5 @@
 import 'package:cumbialive/components/components.dart';
+import 'package:cumbialive/components/cumbia_radio_button.dart';
 import 'package:cumbialive/config/config.dart';
 import 'package:cumbialive/model/models.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,12 +35,14 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
   double constCommission = 0.10;
   int emeralds = 0;
   bool canPushBool = false;
+  int _groupValue = 1;
 
   @override
   void initState() {
     product = widget.product;
     setState(() {
       unitsController.text = '0';
+      _groupValue =  product.isFreeShipping != null && product.isFreeShipping ? 0 : 1;
     });
     super.initState();
   }
@@ -289,6 +292,52 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
                         keyboardType: TextInputType.number,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         
+                      ),
+                      _gap20,
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Seleccione el envío",
+                          style: Styles.txtTitleLbl.copyWith(
+                            // color: isDark?Palette.b5Grey :labelTextColor,
+                            //fontSize: sizeLabeltext,
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CumbiaRadioButton(
+                            title: "Envío gratis",
+                            onChanged: (newValue) {
+                              _canPush();
+                              setState( () {
+                                print(_groupValue);
+                                product.isFreeShipping = true;
+                                _groupValue = newValue;
+                              });
+                            },
+                            groupValue: _groupValue,
+                            value: 0,
+                          ),
+                          CumbiaRadioButton(
+                            title: "Envío pagado",
+                            onChanged: (newValue) {
+                              _canPush();
+
+                              print(_groupValue);
+
+                              setState( () {
+                                product.isFreeShipping = false;
+                                _groupValue = newValue;
+                                print(_groupValue);
+                              });
+                            },
+                            groupValue: _groupValue,
+                            value: 1,
+                          )
+                        ],
                       ),
                     ],
                   ),

@@ -370,7 +370,9 @@ class _MyShopScreenState extends State<MyShopScreen> {
                                 comission: pur.data()['comission'],
                                 price: pur.data()['price'],
                                 rated: pur.data()['rated'],
-                              ));
+                             isFreeShipping: pur.data()['isFreeShipping'] ?? false,
+
+                          ));
                         });
                       });
                     }

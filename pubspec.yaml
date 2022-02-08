@@ -59,6 +59,9 @@ dependencies:
   # Lottie
   lottie: ^1.2.1
 
+  geocoder: ^0.2.1
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

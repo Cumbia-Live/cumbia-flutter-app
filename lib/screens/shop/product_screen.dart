@@ -55,6 +55,9 @@ class _ProductScreenState extends State<ProductScreen> {
                         'El producto ya se encuentra en el carro', () {});
                   } else {
                     setState(() {
+                      if(product.isFreeShipping != null && product.isFreeShipping){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enjoy Free Shipping")));
+                      }
                       shoppingCart.list.add(product);
                     });
                   }

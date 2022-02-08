@@ -18,6 +18,10 @@ class Merchant {
   bool isOpen;
   Rate rate;
 
+  String storeAddress;
+  String storeLat;
+  String storeLng;
+
   Merchant({
     this.id,
     this.shopName,

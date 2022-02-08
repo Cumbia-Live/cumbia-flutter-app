@@ -316,11 +316,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             iconData: Icons.store_mall_directory,
                             onTap: () async {
                               bool open;
+                              print(References.merchant.toString() + user.id
+                                  );
                               await References.merchant
                                   .where('userId', isEqualTo: user.id)
                                   .get()
                                   .then((value) => open =
-                                      value.docs.first.data()['isOpen'])
+                                      value.docs.first['isOpen'])
                                   .then((value) => {
                                         Navigator.push(
                                           context,

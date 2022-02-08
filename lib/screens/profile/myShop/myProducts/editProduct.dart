@@ -1,3 +1,4 @@
+import 'package:cumbialive/components/cumbia_radio_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -50,6 +51,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   bool canPush = false;
 
+  bool isFreeShipping = activeProduct.isFreeShipping != null? activeProduct.isFreeShipping : false;
+  int _groupValue = activeProduct.isFreeShipping != null && activeProduct.isFreeShipping ? 0 : 1 ;
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,7 +90,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       ),
       body: SafeArea(
         child: Container(
-          child: CatapultaScrollView(
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -183,6 +188,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           title: 'Tamaño',
                         ),
                         SizedBox(height: 60.0),
+
                         Text(
                           'Medidas',
                           style: Styles.txtTitleLbl,
@@ -347,6 +353,54 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           ],
                         ),
                         SizedBox(height: 60.0),
+                        Text(
+                          "Seleccione el envío",
+                          style: Styles.txtTitleLbl.copyWith(
+                            // color: isDark?Palette.b5Grey :labelTextColor,
+                            //fontSize: sizeLabeltext,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            CumbiaRadioButton(
+                              title: "Envío gratis",
+                              onChanged: (newValue) {
+                                _canPush(newValue.toString());
+                                setState( () {
+                                  print(_groupValue);
+                                  activeProduct.isFreeShipping = true;
+                                  _groupValue = newValue;
+                                  isFreeShipping = true;
+
+
+                                });
+                              },
+                              groupValue: _groupValue,
+                              value: 0,
+                            ),
+                            CumbiaRadioButton(
+                              title: "Envío pagado",
+                              onChanged: (newValue) {
+                                _canPush(newValue.toString());
+
+                                print(_groupValue);
+
+                                setState( () {
+                                  activeProduct.isFreeShipping = false;
+
+                                  _groupValue = newValue;
+                                  isFreeShipping = false;
+                                  print(_groupValue);
+                                });
+                              },
+                              groupValue: _groupValue,
+                              value: 1,
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 60.0),
                         CumbiaTextField(
                           placeholder: '0',
                           keyboardType: TextInputType.number,
@@ -484,6 +538,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       },
       'avaliableUnits': int.parse(avaliableUnitsController.text.trim()),
       'price': int.parse(priceController.text.trim()),
+      'isFreeShipping': isFreeShipping
     };
 
     print("⏳ ACTUALIZARÉ PRODUCT");

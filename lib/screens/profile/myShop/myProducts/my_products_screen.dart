@@ -400,8 +400,10 @@ class _RegisteredProductItemState extends State<RegisteredProductItem> {
                               '',
                           avaliableUnits: element.data()['avaliableUnits'] ?? '',
                           price: element.data()['price'] ?? '',
-                          color: element.data()['productInfo']['color'] ?? '',
-                          size: element.data()['productInfo']['size'] ?? '',
+                          color: element.data()['variantInfo']['color'] ?? '',
+                          size: element.data()['variantInfo']['size'] ?? '',
+                          isFreeShipping: element.data()['isFreeShipping']?? false,
+
                         )
                       })
                   .then((value) async {

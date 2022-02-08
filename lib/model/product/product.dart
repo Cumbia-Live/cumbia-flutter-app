@@ -36,6 +36,8 @@ class Product {
   int rate;
   List<Review> reviews = [];
 
+  bool isFreeShipping;
+
   Product({
     this.id,
     this.uid,
@@ -68,5 +70,6 @@ class Product {
     this.unitsCheckout = 1,
     this.rated = false,
     this.rate = 0,
+    this.isFreeShipping
   });
 }

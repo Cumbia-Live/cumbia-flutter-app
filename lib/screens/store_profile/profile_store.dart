@@ -490,6 +490,7 @@ class _ProfileStoreScreenState extends State<ProfileStoreScreen> {
                 price: product.data()['price'] ?? "No especifica",
                 isSelected: product.data()['isSelected'],
                 comission: product.data()['comission'],
+                isFreeShipping: product.data()['isFreeShipping'] ?? false,
                 emeralds: product.data()['emeralds'] ?? 0,
                 unitsCarrito: 1,
                 unitsCheckout: 1,

@@ -285,6 +285,8 @@ class _Q3ProductVariantScreenState extends State<Q3ProductVariantScreen> {
       'isSelected': false,
       'unitsCarrito': 0,
       'unitsCheckout': 0,
+      'isFreeShipping': product.isFreeShipping
+
     };
     // Subo doc
     LogMessage.post('MAIN PRODUCT');

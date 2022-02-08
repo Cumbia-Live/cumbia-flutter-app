@@ -1,6 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 
 import '../../../../config/config.dart';
 import '../../../../functions/functions.dart';
@@ -28,7 +29,7 @@ class _ShopInfoScreenState extends State<ShopInfoScreen> {
   final TextEditingController usernameController =
       TextEditingController(text: user.username);
   final TextEditingController phoneController =
-      TextEditingController(text: user.phoneNumber.basePhoneNumber);
+      TextEditingController(text: user.phoneNumber != null ? user.phoneNumber.basePhoneNumber :"");
   final TextEditingController pickUpPointController =
       TextEditingController(text: merchant.pickUpPoint);
   final TextEditingController category1Controller =
@@ -39,9 +40,32 @@ class _ShopInfoScreenState extends State<ShopInfoScreen> {
       TextEditingController(text: merchant.instagram);
   final TextEditingController webPageController =
       TextEditingController(text: merchant.webPage);
+  final TextEditingController addressController =
+  TextEditingController(text: merchant.storeAddress);
 
   bool canPush = false;
 
+   getlatLng(String query) async{
+    try {
+      var addresses = await Geocoder.local.findAddressesFromQuery(query);
+      var first = addresses.first;
+
+      if(first != null) {
+        merchant.storeAddress = query;
+        merchant.storeLat = first.coordinates.latitude.toString();
+        merchant.storeLng = first.coordinates.longitude.toString();
+
+        print( query);
+        return null;
+      }else{
+        return "Enter a valid address";
+      }
+
+    }catch(e){
+      print(e);
+      return "Enter a valid address";
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,7 +147,7 @@ class _ShopInfoScreenState extends State<ShopInfoScreen> {
                         CumbiaTextField(
                           keyboardType: TextInputType.phone,
                           placeholder: 'Ingresa un numero celular',
-                          prefixText: '${user.phoneNumber.dialingCode} ',
+                          prefixText: user.phoneNumber != null? '${user.phoneNumber.dialingCode} ' :"",
                           onChanged: _canPush,
                           controller: phoneController,
                           validator: (value) {
@@ -150,8 +174,7 @@ class _ShopInfoScreenState extends State<ShopInfoScreen> {
                           ),
                         ),
                         SizedBox(height: 20.0),
-                        merchant.pickUpPoint != null
-                            ? CumbiaTextField(
+                       CumbiaTextField(
                                 placeholder: 'Ingresa una dirección',
                                 onChanged: _canPush,
                                 controller: pickUpPointController,
@@ -160,12 +183,19 @@ class _ShopInfoScreenState extends State<ShopInfoScreen> {
                                     return 'Por favor, rellena este campo';
                                   } else {
                                     return null;
+                                    //return null;
                                   }
                                 },
+
+                               onFieldSubmitted: (value) async{
+                                 await getlatLng(value);
+                               },
+
+
                                 title: 'Lugar de recogida',
-                              )
-                            : buttonItem('pickUpPoint', 'un lugar de recogida',
-                                'Lugar de recogida'),
+                              ),
+                            /*: buttonItem('pickUpPoint', 'un lugar de recogida',
+                                'Lugar de recogida'),*/
                         SizedBox(height: 60.0),
                         Text('Comercio', style: Styles.titleLbl),
                         SizedBox(height: 20.0),
@@ -295,7 +325,7 @@ class _ShopInfoScreenState extends State<ShopInfoScreen> {
                                 'Su información se actualizó exitosamente.',
                                 () {
                                   updateData();
-                                  Navigator.of(context).pop();
+                                  //Navigator.of(context).pop();
                                 },
                               );
                             }
@@ -423,38 +453,76 @@ class _ShopInfoScreenState extends State<ShopInfoScreen> {
   }
 
   Future<void> updateData() async {
+    showLoaderDialog(context);
+
     await References.users.doc(user.id).update({
       'username': usernameController.text.trim(),
       'phoneNumber': {
         'basePhoneNumber': phoneController.text.trim(),
-        'dialingCode': user.phoneNumber.dialingCode
+        'dialingCode':user.phoneNumber != null? user.phoneNumber.dialingCode :""
       },
     });
 
-    var document;
-    await References.merchant
-        .where('userId', isEqualTo: user.id)
-        .get()
-        .then((value) => document = value.docs.first.id)
-        .then((value) => {
-              References.merchant.doc(document).update({
-                'shopName': nameController.text.trim(),
-                'phoneNumber': phoneController.text.trim(),
-                'pickUpPoint': pickUpPointController.text.trim() == ''
-                    ? null
-                    : pickUpPointController.text.trim(),
-                'principalCategory': category1Controller.text.trim(),
-                'secondaryCategory': category2Controller.text.trim() == ''
-                    ? null
-                    : category2Controller.text.trim(),
-                'colombianProducts': colP,
-                'instagram': instagramController.text.trim() == ''
-                    ? null
-                    : instagramController.text.trim(),
-                'webPage': webPageController.text.trim() == ''
-                    ? null
-                    : webPageController.text.trim(),
-              })
-            });
+    if(pickUpPointController.text == null || pickUpPointController.text.isEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter a valid address")));
+      Navigator.of(context,rootNavigator: true).pop();
+      return;
+    }
+
+    String result =  await getlatLng(pickUpPointController.text);
+
+    if(result == null) {
+      var document;
+      await References.merchant
+          .where('userId', isEqualTo: user.id)
+          .get()
+          .then((value) => document = value.docs.first.id)
+          .then((value) =>
+      {
+        References.merchant.doc(document).update({
+          'shopName': nameController.text.trim(),
+          'phoneNumber': phoneController.text.trim(),
+          'pickUpPoint': pickUpPointController.text.trim() == ''
+              ? null
+              : pickUpPointController.text.trim(),
+          'pickUpLatitude': merchant.storeLat,
+          'pickUpLongitude': merchant.storeLng,
+          'principalCategory': category1Controller.text.trim(),
+          'secondaryCategory': category2Controller.text.trim() == ''
+              ? null
+              : category2Controller.text.trim(),
+          'colombianProducts': colP,
+          'instagram': instagramController.text.trim() == ''
+              ? null
+              : instagramController.text.trim(),
+          'webPage': webPageController.text.trim() == ''
+              ? null
+              : webPageController.text.trim(),
+
+        })
+      });
+      Navigator.of(context,rootNavigator: true).pop();
+      Navigator.of(context).pop();
+    }else{
+      Navigator.of(context,rootNavigator: true).pop();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter a valid address")));
+
+    }
+  }
+
+  showLoaderDialog(BuildContext context){
+    AlertDialog alert=AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(),
+          Container(margin: EdgeInsets.only(left: 7),child:Text("Loading..." )),
+        ],),
+    );
+    showDialog(barrierDismissible: false,
+      context:context,
+      builder:(BuildContext context){
+        return alert;
+      },
+    );
   }
 }
