@@ -518,7 +518,13 @@ class _SearchScreenState extends State<SearchScreen>
                         onLive: userDoc.data()["onLive"]),
                     shopName: merchantStream.data()["shopName"],
                     category1: merchantStream.data()["principalCategory"],
-                    category2: merchantStream.data()["secondaryCategory"]),
+                    category2: merchantStream.data()["secondaryCategory"],
+                  storeLocation: Address(
+                    address: merchantStream.data()['storeLocation'] != null ? merchantStream.data()['storeLocation']['address'] :"",
+                    city: merchantStream.data()['storeLocation'] != null ?merchantStream.data()['storeLocation']['city']:"",
+                    country:merchantStream.data()['storeLocation'] != null ?merchantStream.data()['storeLocation']['country']:"",
+                    state: merchantStream.data()['storeLocation'] != null ?merchantStream.data()['storeLocation']['state']:"",
+                  ),),
               );
             }
           }).catchError((e) {

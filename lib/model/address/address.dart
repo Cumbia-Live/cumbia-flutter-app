@@ -2,6 +2,7 @@ class Address {
   String address;  
   String city;  
   String country;
+  String state;
   bool isPrincipal;  
 
   Address({
@@ -9,5 +10,6 @@ class Address {
     this.city,
     this.country,
     this.isPrincipal,
+    this.state
   });
 }

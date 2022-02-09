@@ -1,3 +1,4 @@
+import 'package:cumbialive/screens/profile/myShop/my_shop_screen.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import '../../../../config/config.dart';
 import '../../../../functions/functions.dart';
 import 'package:cumbialive/model/models.dart';
 import 'package:cumbialive/components/components.dart';
+import 'package:cumbialive/model/address/address.dart' as addr;
 
 Merchant merchant;
 bool colP;
@@ -28,8 +30,8 @@ class _ShopInfoScreenState extends State<ShopInfoScreen> {
       TextEditingController(text: merchant.shopName);
   final TextEditingController usernameController =
       TextEditingController(text: user.username);
-  final TextEditingController phoneController =
-      TextEditingController(text: user.phoneNumber != null ? user.phoneNumber.basePhoneNumber :"");
+  final TextEditingController phoneController = TextEditingController(
+      text: user.phoneNumber != null ? user.phoneNumber.basePhoneNumber : "");
   final TextEditingController pickUpPointController =
       TextEditingController(text: merchant.pickUpPoint);
   final TextEditingController category1Controller =
@@ -41,31 +43,37 @@ class _ShopInfoScreenState extends State<ShopInfoScreen> {
   final TextEditingController webPageController =
       TextEditingController(text: merchant.webPage);
   final TextEditingController addressController =
-  TextEditingController(text: merchant.storeAddress);
+      TextEditingController(text: merchant.storeLocation != null? merchant.storeLocation.address :"");
+  final TextEditingController countryController =
+      TextEditingController(text:  merchant.storeLocation != null? merchant.storeLocation.country:"");
+  final TextEditingController stateController =
+      TextEditingController(text:  merchant.storeLocation != null? merchant.storeLocation.state:"");
+  final TextEditingController cityController =
+      TextEditingController(text:  merchant.storeLocation != null?  merchant.storeLocation.city:"");
 
   bool canPush = false;
 
-   getlatLng(String query) async{
+  getlatLng(String query) async {
     try {
       var addresses = await Geocoder.local.findAddressesFromQuery(query);
       var first = addresses.first;
 
-      if(first != null) {
+      if (first != null) {
         merchant.storeAddress = query;
         merchant.storeLat = first.coordinates.latitude.toString();
         merchant.storeLng = first.coordinates.longitude.toString();
 
-        print( query);
+        print(query);
         return null;
-      }else{
+      } else {
         return "Enter a valid address";
       }
-
-    }catch(e){
+    } catch (e) {
       print(e);
       return "Enter a valid address";
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,7 +155,9 @@ class _ShopInfoScreenState extends State<ShopInfoScreen> {
                         CumbiaTextField(
                           keyboardType: TextInputType.phone,
                           placeholder: 'Ingresa un numero celular',
-                          prefixText: user.phoneNumber != null? '${user.phoneNumber.dialingCode} ' :"",
+                          prefixText: user.phoneNumber != null
+                              ? '${user.phoneNumber.dialingCode} '
+                              : "",
                           onChanged: _canPush,
                           controller: phoneController,
                           validator: (value) {
@@ -174,28 +184,108 @@ class _ShopInfoScreenState extends State<ShopInfoScreen> {
                           ),
                         ),
                         SizedBox(height: 20.0),
-                       CumbiaTextField(
-                                placeholder: 'Ingresa una dirección',
-                                onChanged: _canPush,
-                                controller: pickUpPointController,
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Por favor, rellena este campo';
-                                  } else {
-                                    return null;
-                                    //return null;
-                                  }
-                                },
-
-                               onFieldSubmitted: (value) async{
-                                 await getlatLng(value);
-                               },
-
-
-                                title: 'Lugar de recogida',
-                              ),
-                            /*: buttonItem('pickUpPoint', 'un lugar de recogida',
+                        CumbiaTextField(
+                          placeholder: 'Ingresa una dirección',
+                          onChanged: _canPush,
+                          controller: pickUpPointController,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Por favor, rellena este campo';
+                            } else {
+                              return null;
+                              //return null;
+                            }
+                          },
+                          onFieldSubmitted: (value) async {
+                            await getlatLng(value);
+                          },
+                          title: 'Lugar de recogida',
+                        ),
+                        /*: buttonItem('pickUpPoint', 'un lugar de recogida',
                                 'Lugar de recogida'),*/
+                        SizedBox(height: 20.0),
+                        CumbiaTextField(
+                          placeholder: 'País',
+                          onChanged: _canPush,
+                          controller: countryController,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Por favor, rellena este campo';
+                            } else {
+                              return null;
+                              //return null;
+                            }
+                          },
+                          onFieldSubmitted: (value) async {
+                            if (value.isNotEmpty) {
+
+                              if(merchant.storeLocation == null)
+                                merchant.storeLocation = addr.Address();
+
+                              merchant.storeLocation.country = value;
+                            } else {
+                              return null;
+                              //return null;
+                            }
+                          },
+                          title: 'País',
+                        ),
+                        /*: buttonItem('pickUpPoint', 'un lugar de recogida',
+                                'Lugar de recogida'),*/
+                        SizedBox(height: 20.0),
+                        CumbiaTextField(
+                          placeholder: 'Provincia del estado',
+                          onChanged: _canPush,
+                          controller: stateController,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Por favor, rellena este campo';
+                            } else {
+                              return null;
+                              //return null;
+                            }
+                          },
+                          onFieldSubmitted: (value) async {
+                            if (value.isNotEmpty) {
+                              if(merchant.storeLocation == null)
+                                merchant.storeLocation = addr.Address();
+
+                              merchant.storeLocation.state = value;
+                            } else {
+                              return null;
+                              //return null;
+                            }
+                          },
+                          title: 'Provincia del estado',
+                        ),
+
+                        SizedBox(height: 20.0),
+                        CumbiaTextField(
+                          placeholder: 'Ciudad',
+                          onChanged: _canPush,
+                          controller: cityController,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Por favor, rellena este campo';
+                            } else {
+                              return null;
+                              //return null;
+                            }
+                          },
+                          onFieldSubmitted: (value) async {
+                            if (value.isNotEmpty) {
+
+                              if(merchant.storeLocation == null)
+                                merchant.storeLocation = addr.Address();
+
+                              merchant.storeLocation.city = value;
+                            } else {
+                              return null;
+                              //return null;
+                            }
+                          },
+                          title: 'Ciudad',
+                        ),
                         SizedBox(height: 60.0),
                         Text('Comercio', style: Styles.titleLbl),
                         SizedBox(height: 20.0),
@@ -459,68 +549,78 @@ class _ShopInfoScreenState extends State<ShopInfoScreen> {
       'username': usernameController.text.trim(),
       'phoneNumber': {
         'basePhoneNumber': phoneController.text.trim(),
-        'dialingCode':user.phoneNumber != null? user.phoneNumber.dialingCode :""
+        'dialingCode':
+            user.phoneNumber != null ? user.phoneNumber.dialingCode : ""
       },
     });
 
-    if(pickUpPointController.text == null || pickUpPointController.text.isEmpty){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter a valid address")));
-      Navigator.of(context,rootNavigator: true).pop();
+    if (pickUpPointController.text == null ||
+        pickUpPointController.text.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Enter a valid address")));
+      Navigator.of(context, rootNavigator: true).pop();
       return;
     }
 
-    String result =  await getlatLng(pickUpPointController.text);
+    String result = await getlatLng(pickUpPointController.text);
 
-    if(result == null) {
+    if (result == null) {
       var document;
       await References.merchant
           .where('userId', isEqualTo: user.id)
           .get()
           .then((value) => document = value.docs.first.id)
-          .then((value) =>
-      {
-        References.merchant.doc(document).update({
-          'shopName': nameController.text.trim(),
-          'phoneNumber': phoneController.text.trim(),
-          'pickUpPoint': pickUpPointController.text.trim() == ''
-              ? null
-              : pickUpPointController.text.trim(),
-          'pickUpLatitude': merchant.storeLat,
-          'pickUpLongitude': merchant.storeLng,
-          'principalCategory': category1Controller.text.trim(),
-          'secondaryCategory': category2Controller.text.trim() == ''
-              ? null
-              : category2Controller.text.trim(),
-          'colombianProducts': colP,
-          'instagram': instagramController.text.trim() == ''
-              ? null
-              : instagramController.text.trim(),
-          'webPage': webPageController.text.trim() == ''
-              ? null
-              : webPageController.text.trim(),
-
-        })
-      });
-      Navigator.of(context,rootNavigator: true).pop();
+          .then((value) => {
+                References.merchant.doc(document).update({
+                  'shopName': nameController.text.trim(),
+                  'phoneNumber': phoneController.text.trim(),
+                  'pickUpPoint': pickUpPointController.text.trim() == ''
+                      ? null
+                      : pickUpPointController.text.trim(),
+                  'pickUpLatitude': merchant.storeLat,
+                  'pickUpLongitude': merchant.storeLng,
+                  'storeLocation': {
+                    'address': pickUpPointController.text.trim(),
+                    'country': countryController.text.trim(),
+                    'state': stateController.text.trim(),
+                    'city' : cityController.text.trim(),
+                  },
+                  'principalCategory': category1Controller.text.trim(),
+                  'secondaryCategory': category2Controller.text.trim() == ''
+                      ? null
+                      : category2Controller.text.trim(),
+                  'colombianProducts': colP,
+                  'instagram': instagramController.text.trim() == ''
+                      ? null
+                      : instagramController.text.trim(),
+                  'webPage': webPageController.text.trim() == ''
+                      ? null
+                      : webPageController.text.trim(),
+                })
+              });
+      Navigator.of(context, rootNavigator: true).pop();
       Navigator.of(context).pop();
-    }else{
-      Navigator.of(context,rootNavigator: true).pop();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter a valid address")));
-
+    } else {
+      Navigator.of(context, rootNavigator: true).pop();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Enter a valid address")));
     }
   }
 
-  showLoaderDialog(BuildContext context){
-    AlertDialog alert=AlertDialog(
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
       content: new Row(
         children: [
           CircularProgressIndicator(),
-          Container(margin: EdgeInsets.only(left: 7),child:Text("Loading..." )),
-        ],),
+          Container(
+              margin: EdgeInsets.only(left: 7), child: Text("Loading...")),
+        ],
+      ),
     );
-    showDialog(barrierDismissible: false,
-      context:context,
-      builder:(BuildContext context){
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
         return alert;
       },
     );

@@ -771,7 +771,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   nit: merchantStream.data()["nit"],
                   razonSocial: merchantStream.data()["razonSocial"],
                   shopName: merchantStream.data()["username"],
-                ),
+                  storeLocation: Address(
+                      address: merchantStream.data()['storeLocation'] != null ? merchantStream.data()['storeLocation']['address'] :"",
+                      city: merchantStream.data()['storeLocation'] != null ?merchantStream.data()['storeLocation']['city']:"",
+                      country:merchantStream.data()['storeLocation'] != null ?merchantStream.data()['storeLocation']['country']:"",
+                      state: merchantStream.data()['storeLocation'] != null ?merchantStream.data()['storeLocation']['state']:"",
+                )),
               );
               lstTiendasCategoria.clear();
               _filterShopsByCategory();

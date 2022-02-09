@@ -18,6 +18,8 @@ class Merchant {
   bool isOpen;
   Rate rate;
 
+  Address storeLocation;
+
   String storeAddress;
   String storeLat;
   String storeLng;
@@ -39,6 +41,7 @@ class Merchant {
     this.colombianProducts,
     this.isOpen,
     this.rate,
+    this.storeLocation,
   });
 }
 
