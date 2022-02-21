@@ -381,7 +381,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               value: 0,
                             ),
                             CumbiaRadioButton(
-                              title: "Envío pagado",
+                              title: "Envío pago por el consumidor",
                               onChanged: (newValue) {
                                 _canPush(newValue.toString());
 

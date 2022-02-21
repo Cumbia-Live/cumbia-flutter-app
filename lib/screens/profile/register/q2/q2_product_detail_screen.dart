@@ -5,8 +5,8 @@ import 'package:cumbialive/model/models.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-
 
 import '../../../screens.dart';
 import 'widgets/q2_text_field.dart';
@@ -15,6 +15,7 @@ import 'widgets/q2_text_field.dart';
 class Q2ProductDetailScreen extends StatefulWidget {
   Q2ProductDetailScreen({Key key, this.product}) : super(key: key);
   Product product;
+
   @override
   _Q2ProductDetailScreenState createState() => _Q2ProductDetailScreenState();
 }
@@ -37,12 +38,15 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
   bool canPushBool = false;
   int _groupValue = 1;
 
+  var isShipmentRequired = true;
+
   @override
   void initState() {
     product = widget.product;
     setState(() {
       unitsController.text = '0';
-      _groupValue =  product.isFreeShipping != null && product.isFreeShipping ? 0 : 1;
+      _groupValue =
+          product.isFreeShipping != null && product.isFreeShipping ? 0 : 1;
     });
     super.initState();
   }
@@ -50,11 +54,13 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: SafeArea(
-          child: CatapultaScrollView(
-            child: Column(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
               children: [
                 PercentIndicator(
                   /// onPressed: controller.back,
@@ -72,114 +78,160 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
                         style: Styles.titleRegister,
                       ),
                       _gap20,
-                      Text(
-                        'Medidas',
-                        style: Styles.txtTitleLbl,
-                      ),
-                      _gap12,
+                      _gap20,
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Q2TextField(
-                            controller: heightController,
-                            text1: 'Alto',
-                            text2: '(cm)',
-                            placeholder: 'Ej: 50',
-                            keyboardType: TextInputType.number,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                                onChanged: (text){
-                                  _canPush();
-                                },
-                            validator: (value) {
-                              if (value == '0') {
-                                return 'No puede ser 0';
-                              } else if (value.isEmpty) {
-                                return 'Campo obligatorio';
-                              }
-                              return null;
+                          Text(
+                            'Necesidad de envio',
+                            style: Styles.txtTitleLbl,
+                          ),
+                          Switch(
+                            value: isShipmentRequired,
+                            onChanged: (value) {
+                              setState(() {
+                                isShipmentRequired = value;
+                                //if(isSwitched)
+                              });
+                              Future.delayed(const Duration(milliseconds: 100), () {
+
+                                _canPush();
+
+                              });
+
                             },
                           ),
-                          Q2TextField(
-                            controller: largeController,
-                            text1: 'Largo',
-                            text2: '(cm)',
-                            placeholder: 'Ej: 50',
-                            keyboardType: TextInputType.number,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                                 onChanged: (text){
-                                  _canPush();
-                                },
-                                validator: (value) {
-                              if (value == '0') {
-                                return 'No puede ser 0';
-                              } else if (value.isEmpty) {
-                                return 'Campo obligatorio';
-                              }
-                              return null;
-                            },
-                          )
                         ],
                       ),
-                      _gap12,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Q2TextField(
-                            controller: widthController,
-                            text1: 'Ancho',
-                            text2: '(cm)',
-                            placeholder: 'Ej: 50',
-                            keyboardType: TextInputType.number,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                                 onChanged: (text){
-                                  _canPush();
-                                },
-                                validator: (value) {
-                              if (value == '0') {
-                                return 'No puede ser 0';
-                              } else if (value.isEmpty) {
-                                return 'Campo obligatorio';
-                              }
-                              return null;
-                            },
-                          ),
-                          Q2TextField(
-                            controller: weightController,
-                            text1: 'Peso',
-                            text2: '(kg)',
-                            placeholder: 'Ej: 50',
-                            keyboardType: TextInputType.number,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                                 onChanged: (text){
-                                  _canPush();
-                                },
-                                validator: (value) {
-                              if (value == '0') {
-                                return 'No puede ser 0';
-                              } else if (value.isEmpty) {
-                                return 'Campo obligatorio';
-                              }
-                              return null;
-                            },
-                          )
-                        ],
-                      ),
+                      _gap20,
+                      isShipmentRequired
+                          ? Text(
+                              'Medidas',
+                              style: Styles.txtTitleLbl,
+                            )
+                          : Container(),
+                      isShipmentRequired ? _gap12 : Container(),
+                      isShipmentRequired
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Q2TextField(
+                                  controller: heightController,
+                                  text1: 'Alto',
+                                  text2: '(cm)',
+                                  placeholder: 'Ej: 50',
+                                  keyboardType: TextInputType.number,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  onChanged: (text) {
+                                    if(isShipmentRequired)
+                                      _canPush();
+                                  },
+                                  validator: (value) {
+                                    if(isShipmentRequired) {
+                                      if (value == '0') {
+                                        return 'No puede ser 0';
+                                      } else if (value.isEmpty) {
+                                        return 'Campo obligatorio';
+                                      }
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                Q2TextField(
+                                  controller: largeController,
+                                  text1: 'Largo',
+                                  text2: '(cm)',
+                                  placeholder: 'Ej: 50',
+                                  keyboardType: TextInputType.number,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  onChanged: (text) {
+                                    if(isShipmentRequired)
+                                      _canPush();
+                                  },
+                                  validator: (value) {
+                                    if(isShipmentRequired) {
+                                      if (value == '0') {
+                                        return 'No puede ser 0';
+                                      } else if (value.isEmpty) {
+                                        return 'Campo obligatorio';
+                                      }
+                                    }
+                                    return null;
+                                  },
+                                )
+                              ],
+                            )
+                          : Container(),
+                      isShipmentRequired ? _gap12 : Container(),
+                      isShipmentRequired
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Q2TextField(
+                                  controller: widthController,
+                                  text1: 'Ancho',
+                                  text2: '(cm)',
+                                  placeholder: 'Ej: 50',
+                                  keyboardType: TextInputType.number,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  onChanged: (text) {
+                                    if(isShipmentRequired)
+                                      _canPush();
+                                  },
+                                  validator: (value) {
+                                    if(isShipmentRequired) {
+                                      if (value == '0') {
+                                        return 'No puede ser 0';
+                                      } else if (value.isEmpty) {
+                                        return 'Campo obligatorio';
+                                      }
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                Q2TextField(
+                                  controller: weightController,
+                                  text1: 'Peso',
+                                  text2: '(kg)',
+                                  placeholder: 'Ej: 50',
+                                  keyboardType: TextInputType.number,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  onChanged: (text) {
+                                    if (isShipmentRequired) _canPush();
+                                  },
+                                  validator: (value) {
+                                    if (isShipmentRequired) {
+                                      if (value == '0') {
+                                        return 'No puede ser 0';
+                                      } else if (value.isEmpty) {
+                                        return 'Campo obligatorio';
+                                      }
+                                    }
+                                    return null;
+                                  },
+                                )
+                              ],
+                            )
+                          : Container(),
                     ],
                   ),
                 ),
-                const SizedBox(height: 9),
-                CumbiaDivider(
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 26,
-                  ),
-                  height: 1,
-                ),
+                isShipmentRequired ? _gap12 : Container(),
+                isShipmentRequired
+                    ? CumbiaDivider(
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 26,
+                        ),
+                        height: 1,
+                      )
+                    : Container(),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
@@ -198,17 +250,17 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               initialValue: unitsController.text,
-                               onChanged: (text){
-                                  _canPush();
-                                },
+                              onChanged: (text) {
+                                _canPush();
+                              },
                               validator: (value) {
-                              if (value == '0') {
-                                return 'No puede ser 0';
-                              } else if (value.isEmpty) {
-                                return 'Campo obligatorio';
-                              }
-                              return null;
-                            },
+                                if (value == '0') {
+                                  return 'No puede ser 0';
+                                } else if (value.isEmpty) {
+                                  return 'Campo obligatorio';
+                                }
+                                return null;
+                              },
                             ),
                           ),
                           Container(
@@ -281,7 +333,6 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
                           setEmeralds();
                           setPrice();
                         },
-                        
                         validator: (value) {
                           if (value.isNotEmpty) {
                             return null;
@@ -291,20 +342,19 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
                         },
                         keyboardType: TextInputType.number,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        
                       ),
                       _gap20,
-                      Align(
+                      isShipmentRequired?  Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           "Seleccione el envío",
                           style: Styles.txtTitleLbl.copyWith(
-                            // color: isDark?Palette.b5Grey :labelTextColor,
-                            //fontSize: sizeLabeltext,
-                          ),
+                              // color: isDark?Palette.b5Grey :labelTextColor,
+                              //fontSize: sizeLabeltext,
+                              ),
                         ),
-                      ),
-                      Row(
+                      ):Container(),
+                      isShipmentRequired?Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -312,7 +362,7 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
                             title: "Envío gratis",
                             onChanged: (newValue) {
                               _canPush();
-                              setState( () {
+                              setState(() {
                                 print(_groupValue);
                                 product.isFreeShipping = true;
                                 _groupValue = newValue;
@@ -322,13 +372,13 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
                             value: 0,
                           ),
                           CumbiaRadioButton(
-                            title: "Envío pagado",
+                            title: "Envío pago por el consumidor",
                             onChanged: (newValue) {
                               _canPush();
 
                               print(_groupValue);
 
-                              setState( () {
+                              setState(() {
                                 product.isFreeShipping = false;
                                 _groupValue = newValue;
                                 print(_groupValue);
@@ -338,7 +388,7 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
                             value: 1,
                           )
                         ],
-                      ),
+                      ):Container(),
                     ],
                   ),
                 ),
@@ -411,7 +461,7 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
                   padding: const EdgeInsets.all(16),
                   child: CumbiaButton(
                     onPressed: () {
-                      if(canPushBool){
+                      if (canPushBool) {
                         _push();
                       }
                     },
@@ -458,6 +508,7 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
       emeralds = (finalPrice / 10).round();
     });
   }
+
   void _canPush() {
     if (_formKey.currentState.validate()) {
       setState(() {
@@ -469,22 +520,25 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
       });
     }
   }
+
   void _push() {
+    _canPush();
     setState(() {
-      product.height = double.parse(heightController.text.trim());
-      product.large = double.parse(largeController.text.trim());
-      product.width = double.parse(widthController.text.trim());
-      product.weight = double.parse(weightController.text.trim());
+      product.height = isShipmentRequired?double.parse(heightController.text.trim()):0;
+      product.large = isShipmentRequired?double.parse(largeController.text.trim()):0;
+      product.width = isShipmentRequired? double.parse(widthController.text.trim()):0;
+      product.weight = isShipmentRequired?double.parse(weightController.text.trim()):0;
       product.avaliableUnits = int.parse(unitsController.text.trim());
       product.price = int.parse(priceController.text.trim());
       product.emeralds = emeralds;
       product.comission = constCommission;
+      product.isShipmentRequired = isShipmentRequired;
     });
     Navigator.push(
       context,
       CupertinoPageRoute(
         builder: (context) => Q3ProductVariantScreen(
-        product: product,
+          product: product,
         ),
       ),
     );

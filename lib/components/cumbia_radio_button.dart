@@ -13,7 +13,7 @@ class CumbiaRadioButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 150,
+      width: 175,
       child: RadioListTile(
         value: value,
         groupValue: groupValue,
