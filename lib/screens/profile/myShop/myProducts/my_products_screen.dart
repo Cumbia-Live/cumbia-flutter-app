@@ -403,6 +403,7 @@ class _RegisteredProductItemState extends State<RegisteredProductItem> {
                           color: element.data()['variantInfo']['color'] ?? '',
                           size: element.data()['variantInfo']['size'] ?? '',
                           isFreeShipping: element.data()['isFreeShipping']?? false,
+                          isShipmentRequired: element.data()['isShipmentRequired']?? true,
 
                         )
                       })

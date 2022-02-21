@@ -353,14 +353,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           ],
                         ),
                         SizedBox(height: 60.0),
-                        Text(
+                        activeProduct.isShipmentRequired?   Text(
                           "Seleccione el envío",
                           style: Styles.txtTitleLbl.copyWith(
                             // color: isDark?Palette.b5Grey :labelTextColor,
                             //fontSize: sizeLabeltext,
                           ),
-                        ),
-                        Row(
+                        ):Container(),
+                        activeProduct.isShipmentRequired? Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -399,7 +399,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               value: 1,
                             )
                           ],
-                        ),
+                        ):Container(),
                         SizedBox(height: 60.0),
                         CumbiaTextField(
                           placeholder: '0',

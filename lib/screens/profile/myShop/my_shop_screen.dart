@@ -371,6 +371,7 @@ class _MyShopScreenState extends State<MyShopScreen> {
                                 price: pur.data()['price'],
                                 rated: pur.data()['rated'],
                              isFreeShipping: pur.data()['isFreeShipping'] ?? false,
+                            isShipmentRequired: pur.data()['isShipmentRequired']?? true,
 
                           ));
                         });
@@ -442,6 +443,12 @@ class _MyShopScreenState extends State<MyShopScreen> {
                           colombianProducts:
                               value.docs.first.data()['colombianProducts'] ??
                                   true,
+                          storeLocation: Address(
+                            address: value.docs.first.data()['storeLocation'] != null ? value.docs.first.data()['storeLocation']['address'] :"",
+                            city: value.docs.first.data()['storeLocation'] != null ?value.docs.first.data()['storeLocation']['city']:"",
+                            country:value.docs.first.data()['storeLocation'] != null ?value.docs.first.data()['storeLocation']['country']:"",
+                            state: value.docs.first.data()['storeLocation'] != null ?value.docs.first.data()['storeLocation']['state']:"",
+                          )
                         ))
                     .then((value) => {
                           Navigator.push(
