@@ -101,6 +101,7 @@ Selecciona los productos que serán mostrados durante el livestream.''',
                                 ),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
                                       color: Palette.white,
@@ -119,9 +120,10 @@ Selecciona los productos que serán mostrados durante el livestream.''',
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
+                                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            products[position].productName,
+                                            products[position].productName != null?products[position].productName:"" ,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               color: products[position]
@@ -135,6 +137,7 @@ Selecciona los productos que serán mostrados durante el livestream.''',
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
                                             ),
+                                            maxLines: 1,
                                           ),
                                           variantLabel(position) == ''
                                               ? const SizedBox.shrink()
@@ -546,7 +549,7 @@ Selecciona los productos que serán mostrados durante el livestream.''',
 
   String variantLabel(int position) {
     // ignore: lines_longer_than_80_chars
-    return '${products[position].color.isNotEmpty ? '${products[position].color}/' : ''}${products[position].dimension.isNotEmpty ? '${products[position].dimension}/' : ''}${products[position].size.isNotEmpty ? '${products[position].size}/' : ''}${products[position].material.isNotEmpty ? '${products[position].material}/' : ''}${products[position].style.isNotEmpty ? '${products[position].style}/' : ''}';
+    return '${products[position].color.isNotEmpty ? '${products[position].color}/' : ''}${products[position].dimension != null && products[position].dimension.isNotEmpty ? '${products[position].dimension}/' : ''}${products[position].size.isNotEmpty ? '${products[position].size}/' : ''}${products[position].material != null && products[position].material.isNotEmpty ? '${products[position].material}/' : ''}${products[position].style != null &&products[position].style.isNotEmpty ? '${products[position].style}/' : ''}';
   }
 
   String setIcon(int position) {
