@@ -165,7 +165,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         isAutocorrectActive: false,
                         textInputFormatters: [
                           // ignore: deprecated_member_use
-                          WhitelistingTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.digitsOnly
                         ],
                         onChanged: (text) {
                           setState(() {
