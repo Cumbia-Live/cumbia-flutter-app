@@ -75,14 +75,14 @@ Future<void> main() async {
 
               /// Datos de contacto a soporte
               support = Support(
-                voiceNumber: constantsDoc["support"]["voiceNumber"],
-                wappNumber: constantsDoc["support"]["wappNumber"],
+                voiceNumber: constantsDoc.data()["support"]["voiceNumber"],
+                wappNumber: constantsDoc.data()["support"]["wappNumber"],
               );
 
               /// Datos de campaña de lanzamiento
               campaign = Campaign(
-                amount: constantsDoc["campaign"]["amount"],
-                isActive: constantsDoc["campaign"]["isActive"],
+                amount: constantsDoc.data()["campaign"]["amount"],
+                isActive: constantsDoc.data()["campaign"]["isActive"],
               );
 
               /// TRM
@@ -100,35 +100,36 @@ Future<void> main() async {
                   LogMessage.getSuccess("USER");
                   if (userDoc.exists) {
                     // Usuario existe en Firestore. Asigna datos del doc descargado.
+                    print("USER" + userDoc.data().toString());
+
                     user = localUser.User(
                       id: userDoc.id,
-                      name: userDoc["name"] ?? "@usuario9823",
-                      email: userDoc["email"],
+                      name: userDoc.data()["name"] ?? "@usuario9823",
+                      email: userDoc.data()["email"],
                       username: userDoc.data()['username'],
-                      profilePictureURL: userDoc["profilePictureURL"],
-                      pushToken: userDoc["pushToken"],
-                      emeralds: userDoc["esmeraldas"] ?? 0,
-                      puntosCumbia: userDoc["puntosCumbia"],
-                      addresses: userDoc.data()["addresses"]
-                          .map(
+                      profilePictureURL: userDoc.data()["profilePictureURL"],
+                      pushToken: userDoc.data()["pushToken"],
+                      emeralds: userDoc.data().containsKey("esmeraldas") ?userDoc.data()["esmeraldas"] ?? 0 :0,
+                      puntosCumbia: userDoc.data().containsKey("puntosCumbia") ? userDoc.data()["puntosCumbia"]:null,
+                      addresses: userDoc.data()["addresses"] != null && userDoc.data()["addresses"] != []?
+                      userDoc.data()["addresses"].map(
                             (addressMap) => Address(
-                          address: addressMap['address'],
-                          city: addressMap['city'],
-                          country: addressMap['country'],
-                          isPrincipal: addressMap['isPrincipal'],
+                          address: addressMap.data()['address'],
+                          city: addressMap.data()['city'],
+                          country: addressMap.data()['country'],
+                          isPrincipal: addressMap.data()['isPrincipal'],
                         ),
-                      )
-                          .toList(),
+                      ).toList() :[],
                       phoneNumber: PhoneNumberCumbia(
-                        dialingCode: userDoc["phoneNumber"]["dialingCode"] ?? "57",
-                        basePhoneNumber: userDoc["phoneNumber"]["basePhoneNumber"]
+                        dialingCode: userDoc.data()["phoneNumber"]["dialingCode"] ?? "57",
+                        basePhoneNumber: userDoc.data()["phoneNumber"]["basePhoneNumber"]
                             .toString()
                             .trim(),
                       ),
-                      roles: userDoc["roles"] != null
+                      roles: userDoc.data()["roles"] != null
                           ? UserRoles(
-                        isAdmin: userDoc["roles"]["isAdmin"] ?? false,
-                        isMerchant: userDoc["roles"]["isMerchant"] ?? false,
+                        isAdmin: userDoc.data()["roles"]["isAdmin"] ?? false,
+                        isMerchant: userDoc.data()["roles"]["isMerchant"] ?? false,
                       )
                           : UserRoles(
                         isAdmin: false,

@@ -244,6 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
           .doc("users/${firebaseUser?.uid}")
           .get()
           .then((userDoc) {
+
         if (userDoc.data()["roles"]["isBloqueado"] == true) {
           // Usuario bloqueado
           Navigator.push(
@@ -263,6 +264,16 @@ class _LoginScreenState extends State<LoginScreen> {
           user.roles = UserRoles(
               isAdmin: userDoc.data()['roles']["isAdmin"],
               isMerchant: userDoc.data()['roles']["isMerchant"]);
+          user.addresses = userDoc.data()["addresses"]
+              .map(
+                (addressMap) => Address(
+              address: addressMap['address'],
+              city: addressMap['city'],
+              country: addressMap['country'],
+              isPrincipal: addressMap['isPrincipal'],
+            ),
+          ).toList();
+
           print("✔️ USER DESCARGADO");
           Navigator.push(
             context,
