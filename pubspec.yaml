@@ -60,6 +60,8 @@ dependencies:
   lottie: ^1.2.1
 
   geocoder: ^0.2.1
+  xml: ^5.3.1
+  xml2json: ^5.3.2
 
 
 dev_dependencies:

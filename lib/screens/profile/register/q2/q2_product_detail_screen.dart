@@ -89,6 +89,8 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
                           ),
                           Switch(
                             value: isShipmentRequired,
+                              activeTrackColor: Color(0xff17BDCE),
+                              activeColor: Color(0xff0D8DA3),
                             onChanged: (value) {
                               setState(() {
                                 isShipmentRequired = value;
@@ -456,7 +458,7 @@ class _Q2ProductDetailScreenState extends State<Q2ProductDetailScreen> {
                         color: Palette.cumbiaDark, weight: FontWeight.bold),
                   ),
                 ),
-                CatapultaSpace(),
+              //  CatapultaSpace(),
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: CumbiaButton(

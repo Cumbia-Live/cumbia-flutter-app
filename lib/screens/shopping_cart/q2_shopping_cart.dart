@@ -1,6 +1,7 @@
 import 'package:cumbialive/components/components.dart';
 import 'package:cumbialive/config/config.dart';
 import 'package:cumbialive/model/models.dart';
+import 'package:cumbialive/network/api_connection.dart';
 import 'package:cumbialive/screens/shopping_cart/q3_shopping_cart.dart';
 import 'package:cumbialive/screens/screens.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,10 +25,23 @@ class Q2ShoppingCartScreen extends StatefulWidget {
   }
 }
 
+
+
 class _Q2ShoppingCartScreenState extends State<Q2ShoppingCartScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController details = TextEditingController();
+
+  String shippingCost = "Fetching...";
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    setState(() async{
+      shippingCost = await getDHLQoute();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +120,7 @@ class _Q2ShoppingCartScreenState extends State<Q2ShoppingCartScreen> {
                                               color: Palette.cumbiaIconGrey),
                                           children: [
                                             TextSpan(
-                                              text: '500 COP.',
+                                              text: '$shippingCost COP.',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             )
