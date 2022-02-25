@@ -87,9 +87,12 @@ class _AudiencePageState extends State<AudiencePage> {
       // city = user.addresses[0].email ?? "";
       // putAddress = user.addresses[0] ?? "";
       // selectedItem = user.addresses[0].accountHolder;
-      for (int i = 0; i < user.addresses.length; i++) {
-        addressesList.add(user.addresses[i]);
-      }
+      //if(user.addresses !=  null) {
+      print(user.addresses.length);
+        for (int i = 0; i < user.addresses.length; i++) {
+          addressesList.add(user.addresses[i]);
+        }
+     // }
     });
     // _addAddresses();
   }
@@ -786,7 +789,7 @@ class _AudiencePageState extends State<AudiencePage> {
                                       fontSize: 12,
                                     ),
                                   ),
-                                  const SizedBox(height: 40),
+                                  const SizedBox(height: 30),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -1296,7 +1299,7 @@ class _AudiencePageState extends State<AudiencePage> {
               width: MediaQuery.of(context).size.width,
               height: 161,
               decoration: BoxDecoration(
-                color: user.emeralds < checkoutProducts()
+                color: user.emeralds != null && user.emeralds < checkoutProducts()
                     ? Palette.cumbiaRed
                     : Palette.cumbiaDark,
                 borderRadius: BorderRadius.only(
@@ -1330,7 +1333,7 @@ class _AudiencePageState extends State<AudiencePage> {
                         'Saldo disponible',
                         style: TextStyle(
                           fontSize: 14,
-                          color: user.emeralds < checkoutProducts()
+                          color: user.emeralds  != null && user.emeralds < checkoutProducts()
                               ? Palette.cumbiaRed
                               : Palette.cumbiaGrey,
                         ),
@@ -1393,7 +1396,7 @@ class _AudiencePageState extends State<AudiencePage> {
                           isLoading = true;
                         });
                         await _addPurchase();
-                      } else if (user.emeralds < checkoutProducts()) {
+                      } else if (user.emeralds!= null && user.emeralds < checkoutProducts()) {
                         _updateEmeraldsUser();
                       } else {
                         setState(() {
@@ -1412,8 +1415,8 @@ class _AudiencePageState extends State<AudiencePage> {
                       }
                     },
                     isLoading: isLoading,
-                    canPush: user.emeralds < checkoutProducts() ? false : true,
-                    title: user.emeralds < checkoutProducts()
+                    canPush: user.emeralds!= null && user.emeralds < checkoutProducts() ? false : true,
+                    title: user.emeralds!= null &&user.emeralds < checkoutProducts()
                         ? 'Recargar esmeraldas'
                         : isCheckoutDetails
                             ? 'Comprar ahora'
