@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "98359246926",
+    "project_id": "cumbia-live",
+    "storage_bucket": "cumbia-live.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:98359246926:android:d3dd7aed08aa56ae67431f",
+        "android_client_info": {
+          "package_name": "app.catapulta.cumbialive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "98359246926-cfdof4rk437pqt5r2u6mp6a975paoqud.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwFW4tDGXzBuhx9c6bNDeA3FSp88IOUGo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "98359246926-cfdof4rk437pqt5r2u6mp6a975paoqud.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "98359246926-93l9mn3g4khjpkliks0c1522138oaj9b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.catapulta.cumbialive"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
